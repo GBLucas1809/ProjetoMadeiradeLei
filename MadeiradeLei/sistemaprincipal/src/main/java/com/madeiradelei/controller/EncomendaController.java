@@ -1,33 +1,61 @@
 package com.madeiradelei.controller;
 
-import com.madeiradelei.controller.dto.EncomendaRequest;
-import com.madeiradelei.service.CriacaoEncomendaService;
-import jakarta.validation.Valid;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.madeiradelei.controller.dto.EncomendaRequest;
+import com.madeiradelei.controller.dto.EncomendaResponse;
+import com.madeiradelei.controller.dto.EncomendaUpdatePagamentoRequest;
+import com.madeiradelei.service.EncomendaService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/encomendas")
+@RequiredArgsConstructor
 public class EncomendaController {
 
-    private final CriacaoEncomendaService service;
-
-    public EncomendaController(CriacaoEncomendaService service) {
-        this.service = service;
-    }
+    private final EncomendaService service;
 
     @PostMapping
-    public ResponseEntity<?> criarEncomenda(@RequestBody @Valid EncomendaRequest dto) {
-        // O Spring valida o @RequestBody usando as anotações do EncomendaRequest.
-        // Se estiver tudo certo, repassamos os dados brutos para o Service orquestrar.
-        
-        Object criada = service.processarNovaEncomenda(
-                dto.clienteId(), 
-                dto.itens(), 
-                dto.tipoPagamento(), 
-                dto.parcelas()
+    public ResponseEntity<EncomendaResponse> criarEncomenda(@RequestBody @Valid EncomendaRequest dto) {
+        EncomendaResponse criada = service.processarNovaEncomenda(
+                dto.clienteId(), dto.itens(), dto.tipoPagamento(), dto.parcelas()
         );
-        
-        return ResponseEntity.ok(criada);
+        return ResponseEntity.status(HttpStatus.CREATED).body(criada);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EncomendaResponse>> listarTodas() {
+        return ResponseEntity.ok(service.buscarTodas());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EncomendaResponse> buscarPorId(@PathVariable String id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
+    }
+
+    @PutMapping("/{id}/pagamento")
+    public ResponseEntity<EncomendaResponse> alterarPagamento(
+            @PathVariable String id, 
+            @RequestBody @Valid EncomendaUpdatePagamentoRequest request) {
+        return ResponseEntity.ok(service.alterarFormaPagamento(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> cancelarEncomenda(@PathVariable String id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

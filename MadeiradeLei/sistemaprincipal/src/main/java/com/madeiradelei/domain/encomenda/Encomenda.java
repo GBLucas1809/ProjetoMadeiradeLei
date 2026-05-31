@@ -78,4 +78,17 @@ public class Encomenda {
     public List<ItemEncomenda> getItens() {
         return Collections.unmodifiableList(this.itens);
     }
+    // --- COMPORTAMENTOS DE ATUALIZAÇÃO (DDD) ---
+    
+    public void alterarFormaPagamento(FormaPagamentoStrategy novaEstrategia, Integer novasParcelas) {
+        Assert.notNull(novaEstrategia, "A estratégia de pagamento é obrigatória");
+        Assert.notNull(novasParcelas, "A quantidade de parcelas é obrigatória");
+        Assert.isTrue(novasParcelas > 0, "A quantidade de parcelas deve ser maior que zero");
+
+        this.estrategiaPagamento = novaEstrategia;
+        this.parcelas = novasParcelas;
+        
+        // A Mágica: Ao mudar o pagamento, mandamos a encomenda recalcular seus totais!
+        this.calcularValores(); 
+    }
 }

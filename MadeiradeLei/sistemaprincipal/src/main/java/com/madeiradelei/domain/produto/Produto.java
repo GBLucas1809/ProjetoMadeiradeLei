@@ -26,6 +26,7 @@ public class Produto {
     // Inicializamos as listas vazias para evitar NullPointerException
     private List<ComponenteNecessario> componentes = new ArrayList<>();
     private List<MaoDeObraNecessaria> horasMaoDeObra = new ArrayList<>();
+    private List<ComponenteProduto> fichaTecnica = new ArrayList<>();
 
     // Construtor principal blindando o nascimento do objeto
     public Produto(String nome, Dimensoes dimensoes, BigDecimal preco, Integer tempoFabricacaoDias) {
@@ -66,6 +67,14 @@ public class Produto {
         }
     }
 
+    public void adicionarComponenteFichaTecnica(String componenteId, BigDecimal quantidade) {
+        Assert.hasText(componenteId, "O ID do componente é obrigatório");
+        Assert.notNull(quantidade, "A quantidade é obrigatória");
+        Assert.isTrue(quantidade.compareTo(BigDecimal.ZERO) > 0, "A quantidade deve ser maior que zero");
+        
+        this.fichaTecnica.add(new ComponenteProduto(componenteId, quantidade));
+    }
+
     public void adicionarMaoDeObra(String cargo, Integer horas) {
         // 1. Fail-Fast
         Assert.hasText(cargo, "O cargo é obrigatório");
@@ -96,5 +105,19 @@ public class Produto {
 
     public List<MaoDeObraNecessaria> getHorasMaoDeObra() {
         return Collections.unmodifiableList(this.horasMaoDeObra);
+    }
+
+    // --- COMPORTAMENTOS DE ATUALIZAÇÃO (DDD) ---
+    
+    public void atualizarPrecoETempo(BigDecimal novoPreco, Integer novoTempoFabricacao) {
+        // Validações (Fail-Fast)
+        Assert.notNull(novoPreco, "O novo preço é obrigatório");
+        Assert.isTrue(novoPreco.compareTo(BigDecimal.ZERO) >= 0, "O preço não pode ser negativo");
+        
+        Assert.notNull(novoTempoFabricacao, "O novo tempo de fabricação é obrigatório");
+        Assert.isTrue(novoTempoFabricacao > 0, "O tempo de fabricação em dias deve ser maior que zero");
+
+        this.preco = novoPreco;
+        this.tempoFabricacaoDias = novoTempoFabricacao;
     }
 }

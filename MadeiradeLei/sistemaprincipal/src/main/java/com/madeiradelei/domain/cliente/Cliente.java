@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.util.Assert;
 
 // O Spring Data usa a anotação @Document para mapear a classe para uma Collection
 @Document(collection = "clientes")
@@ -26,6 +27,11 @@ public class Cliente {
         this.razaoSocial = razaoSocial;
         this.enderecoCobranca = enderecoCobranca;
         this.dataCadastramento = LocalDate.now();
+    }
+    
+    public void alterarRazaoSocial(String novaRazaoSocial) {
+        Assert.hasText(novaRazaoSocial, "A nova razão social não pode estar em branco");
+        this.razaoSocial = novaRazaoSocial;
     }
     
     // Comportamento ao invés de apenas 'setters'
