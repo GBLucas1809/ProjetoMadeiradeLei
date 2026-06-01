@@ -45,7 +45,6 @@ public class ClienteService {
         return mapearParaResponse(clienteSalvo);
     }
 
-    // --- READ ALL (GET) ---
     public List<ClienteResponse> buscarTodos() {
         return repository.findAll().stream()
                 .map(this::mapearParaResponse)
