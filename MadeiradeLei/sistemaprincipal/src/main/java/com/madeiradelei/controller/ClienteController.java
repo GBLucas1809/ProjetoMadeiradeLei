@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.madeiradelei.controller.dto.ClienteRequest;
 import com.madeiradelei.controller.dto.ClienteResponse;
 import com.madeiradelei.controller.dto.ClienteUpdateRequest;
+import com.madeiradelei.controller.dto.EnderecoUpdateRequest;
 import com.madeiradelei.service.ClienteService;
 
 import jakarta.validation.Valid;
@@ -56,5 +59,13 @@ public class ClienteController {
         service.deletar(id);
         // O padrão REST para exclusão bem-sucedida é 204 No Content
         return ResponseEntity.noContent().build(); 
+    }
+
+    @PatchMapping("/{id}/endereco")
+    @PreAuthorize("hasAnyRole('GERENTE', 'FUNCIONARIO', 'CLIENTE')")
+    public ResponseEntity<ClienteResponse> atualizarEndereco(
+            @PathVariable("id") String id, 
+            @RequestBody @Valid EnderecoUpdateRequest request) {
+        return ResponseEntity.ok(service.atualizarEndereco(id, request));
     }
 }

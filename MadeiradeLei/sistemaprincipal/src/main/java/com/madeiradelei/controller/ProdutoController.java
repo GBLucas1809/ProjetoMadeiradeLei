@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -58,6 +59,13 @@ public class ProdutoController {
     @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> deletar(@PathVariable String id) {
         service.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/inativar")
+    @PreAuthorize("hasRole('GERENTE')")
+    public ResponseEntity<Void> inativar(@PathVariable("id") String id) {
+        service.inativarProduto(id);
         return ResponseEntity.noContent().build();
     }
 }

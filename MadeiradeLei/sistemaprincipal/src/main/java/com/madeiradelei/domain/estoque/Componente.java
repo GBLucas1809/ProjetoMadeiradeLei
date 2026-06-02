@@ -53,4 +53,10 @@ public class Componente {
 
         this.quantidadeEmEstoque = this.quantidadeEmEstoque.subtract(quantidade);
     }
+
+    public void atualizarPrecoDeCusto(BigDecimal novoPreco) {
+        Assert.notNull(novoPreco, "O preço não pode ser nulo");
+        Assert.isTrue(novoPreco.compareTo(BigDecimal.ZERO) > 0, "O preço deve ser positivo");
+        this.precoCusto = novoPreco;
+    }
 }

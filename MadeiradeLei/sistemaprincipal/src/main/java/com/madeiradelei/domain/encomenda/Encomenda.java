@@ -39,6 +39,7 @@ public class Encomenda {
     
     private FormaPagamentoStrategy estrategiaPagamento;
     private Integer parcelas;
+    private StatusEncomenda status = StatusEncomenda.AGUARDANDO_PAGAMENTO; // Estado inicial da encomenda
 
     // Construtor principal (Fail-Fast e Object Calisthenics)
     public Encomenda(Long numero, Cliente cliente, List<ItemEncomenda> itens, FormaPagamentoStrategy estrategiaPagamento, Integer parcelas) {
@@ -90,5 +91,12 @@ public class Encomenda {
         
         // A Mágica: Ao mudar o pagamento, mandamos a encomenda recalcular seus totais!
         this.calcularValores(); 
+    }
+
+    public void avancarParaProducao() {
+        if (this.status != StatusEncomenda.AGUARDANDO_PAGAMENTO) {
+            throw new IllegalStateException("A encomenda já passou desta fase.");
+        }
+        this.status = StatusEncomenda.EM_PRODUCAO;
     }
 }

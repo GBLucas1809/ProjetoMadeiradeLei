@@ -22,6 +22,7 @@ public class Produto {
     private Dimensoes dimensoes;
     private BigDecimal preco;
     private Integer tempoFabricacaoDias;
+    private boolean ativo = true;
 
     // Inicializamos as listas vazias para evitar NullPointerException
     private List<ComponenteNecessario> componentes = new ArrayList<>();
@@ -119,5 +120,12 @@ public class Produto {
 
         this.preco = novoPreco;
         this.tempoFabricacaoDias = novoTempoFabricacao;
+    }
+
+    public void inativar() {
+        if (!this.ativo) {
+            throw new IllegalStateException("O produto já está inativo.");
+        }
+        this.ativo = false;
     }
 }

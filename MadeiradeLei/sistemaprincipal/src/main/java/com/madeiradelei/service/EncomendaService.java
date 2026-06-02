@@ -114,4 +114,14 @@ public class EncomendaService {
                 encomenda.getValorLiquido()
         );
     }
+    
+    @Transactional
+    public EncomendaResponse iniciarProducao(String id) {
+        Encomenda encomenda = buscarEncomendaOuFalhar(id);
+        
+        // Chamamos o comportamento parcial (PATCH)
+        encomenda.avancarParaProducao();
+        
+        return mapearParaResponse(encomendaRepository.save(encomenda));
+    }
 }

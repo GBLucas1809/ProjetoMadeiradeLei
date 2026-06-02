@@ -33,6 +33,11 @@ public class Cliente {
         Assert.hasText(novaRazaoSocial, "A nova razão social não pode estar em branco");
         this.razaoSocial = novaRazaoSocial;
     }
+
+    public void atualizarEndereco(String cep, String logradouro, String numero, String cidade, String estado) {
+        Endereco novoEndereco = new Endereco(logradouro, numero, cep, cidade, estado);
+        this.enderecoCobranca = novoEndereco;
+    }
     
     // Comportamento ao invés de apenas 'setters'
     public void adicionarEnderecoEntrega(Endereco endereco) {
@@ -53,5 +58,9 @@ public class Cliente {
 
     public LocalDate getDataCadastramento() {
         return dataCadastramento;
+    }
+
+    public Endereco getEnderecoCobranca() {
+        return enderecoCobranca;
     }
 }

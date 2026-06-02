@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.madeiradelei.controller.dto.ComponenteRequest;
 import com.madeiradelei.controller.dto.ComponenteResponse;
 import com.madeiradelei.controller.dto.MovimentacaoEstoqueRequest;
+import com.madeiradelei.controller.dto.PrecoCustoUpdateRequest;
 import com.madeiradelei.service.ComponenteService;
 
 import jakarta.validation.Valid;
@@ -49,5 +51,13 @@ public class ComponenteController {
     @PreAuthorize("hasAnyRole('GERENTE', 'FUNCIONARIO')")
     public ResponseEntity<ComponenteResponse> saidaEstoque(@PathVariable String id, @RequestBody @Valid MovimentacaoEstoqueRequest request) {
         return ResponseEntity.ok(service.registrarSaida(id, request));
+    }
+
+    @PatchMapping("/{id}/preco-custo")
+    @PreAuthorize("hasAnyRole('GERENTE', 'FUNCIONARIO')")
+    public ResponseEntity<ComponenteResponse> atualizarPrecoCusto(
+            @PathVariable("id") String id, 
+            @RequestBody @Valid PrecoCustoUpdateRequest request) {
+        return ResponseEntity.ok(service.atualizarPrecoCusto(id, request));
     }
 }

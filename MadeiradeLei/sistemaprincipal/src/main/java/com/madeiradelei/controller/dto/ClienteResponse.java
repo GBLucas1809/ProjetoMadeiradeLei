@@ -6,6 +6,7 @@ public record ClienteResponse(
         String id,
         String cnpj,
         String razaoSocial,
-        LocalDate dataCadastramento
+        LocalDate dataCadastramento,
+        EnderecoResponse enderecoCobranca
 ) {
 }

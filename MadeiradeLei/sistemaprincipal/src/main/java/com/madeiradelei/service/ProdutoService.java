@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.madeiradelei.controller.dto.ProdutoRequest;
@@ -84,5 +85,14 @@ public class ProdutoService {
                 produto.getPreco(),
                 produto.getTempoFabricacaoDias()
         );
+    }
+
+    @Transactional
+    public void inativarProduto(String id) {
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+        
+        produto.inativar();
+        repository.save(produto);
     }
 }

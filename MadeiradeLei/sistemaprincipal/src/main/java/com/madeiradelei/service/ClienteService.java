@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.madeiradelei.controller.dto.ClienteRequest;
 import com.madeiradelei.controller.dto.ClienteResponse;
 import com.madeiradelei.controller.dto.ClienteUpdateRequest;
+import com.madeiradelei.controller.dto.EnderecoResponse;
+import com.madeiradelei.controller.dto.EnderecoUpdateRequest;
 import com.madeiradelei.domain.cliente.Cliente;
 import com.madeiradelei.domain.cliente.Cnpj;
 import com.madeiradelei.domain.cliente.Endereco;
@@ -86,7 +89,30 @@ public class ClienteService {
                 cliente.getId(),
                 cliente.getCnpj().getValor(),
                 cliente.getRazaoSocial(),
-                cliente.getDataCadastramento()
+                cliente.getDataCadastramento(),
+                new EnderecoResponse(
+                        cliente.getEnderecoCobranca().getLogradouro(),
+                        cliente.getEnderecoCobranca().getNumero(),
+                        cliente.getEnderecoCobranca().getCep(),
+                        cliente.getEnderecoCobranca().getCidade(),
+                        cliente.getEnderecoCobranca().getEstado()
+                )
         );
+    }
+
+    @Transactional
+    public ClienteResponse atualizarEndereco(String id, EnderecoUpdateRequest request) {
+        Cliente cliente = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        
+        cliente.atualizarEndereco(
+                request.cep(), 
+                request.logradouro(), 
+                request.numero(),  
+                request.cidade(), 
+                request.estado()
+        );
+        
+        return mapearParaResponse(repository.save(cliente));
     }
 }
