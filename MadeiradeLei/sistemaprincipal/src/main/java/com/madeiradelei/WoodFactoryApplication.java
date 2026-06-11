@@ -1,13 +1,13 @@
-package com.madeiralei.sistemaprincipal;
+package com.madeiradelei;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SistemaprincipalApplication {
+public class WoodFactoryApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SistemaprincipalApplication.class, args);
+		SpringApplication.run(WoodFactoryApplication.class, args);
 	}
 
 }
